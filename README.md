@@ -131,23 +131,7 @@ To prepare the datasets for training, rigorous data manipulation techniques were
    - **Custom Politeness Templates**: Crafted a set of polite phrases to enhance the assistant's responses.
    - **Application Logic**: Implemented probabilistic insertion of polite starters and enders to simulate natural language patterns.
 
-5. **Formatting for Training**
 
-   - **Special Token Insertion**: Incorporated special tokens to delineate the start and end of texts.
-   - **Contextual Formatting**: Structured the data to include conversation history, improving model context awareness.
-
-6. **Dataset Splitting**
-
-   - **Training and Validation Sets**: Used `train_test_split` to create robust training and evaluation datasets.
-
-7. **Tokenization and Encoding**
-
-   - **Tokenizer Customization**: Added special tokens to the tokenizer and resized the model's embedding layer accordingly.
-   - **Efficient Encoding**: Tokenized texts with truncation and padding to standardize input lengths.
-
-8. **Data Collation**
-
-   - **Custom Data Collator**: Developed a collator to correctly format tensors for the training loop, ensuring optimal performance.
 
 By meticulously manipulating the data, the model was primed to deliver high-quality, empathetic responses, adhering to expert standards in natural language processing.
 
