@@ -1,14 +1,15 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QLineEdit
-from PyQt5.QtCore import Qt
+# chat_interface.py
+from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QLineEdit, QHBoxLayout
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtWidgets, QtCore
 from models.chatbot_model import generate_response
+from ui.base_window import BaseWindow  # Import the BaseWindow
 
-class ChatInterface(QWidget):
+class ChatInterface(BaseWindow):
     def __init__(self, media_player):
-        super().__init__()
-        self.media_player = media_player
-        self.initUI()
-        self.typing_timer = QtCore.QTimer()
+        super().__init__(media_player, title="Chatbot Interface", header_text="Chat with Assistant")
+        self.init_chat_ui()
+        self.typing_timer = QTimer()
         self.typing_timer.timeout.connect(self.show_next_char)
         self.message_buffer = ""
         self.current_message = ""
@@ -18,36 +19,7 @@ class ChatInterface(QWidget):
         # Start the bot's initial message
         self.start_typing_ai_message()
 
-    def initUI(self):
-        self.setWindowTitle('Chatbot Interface')
-        self.resize(1000, 800)
-        self.center()
-        self.setStyleSheet("background-color: #E3F2FD;")
-
-        # Main vertical layout
-        self.main_layout = QVBoxLayout()
-
-        # Header with Go Back button
-        header_layout = QVBoxLayout()
-        self.back_button = QPushButton("Go Back")
-        self.back_button.setStyleSheet("""
-            background-color: #00897B;
-            border-radius: 10px;
-            color: white;
-            padding: 5px;
-            font-weight: bold;
-            font-size: 17px;
-        """)
-        self.back_button.clicked.connect(self.go_back)
-        header_layout.addWidget(self.back_button, alignment=Qt.AlignTop | Qt.AlignLeft)
-
-        header_label = QLabel("Chat with Assistant")
-        header_label.setAlignment(Qt.AlignCenter)
-        header_label.setStyleSheet("font-size: 27px; font-weight: bold; color: #004D40; padding: 10px;")
-        header_layout.addWidget(header_label, alignment=Qt.AlignCenter)
-
-        self.main_layout.addLayout(header_layout)
-
+    def init_chat_ui(self):
         # Chat display area
         self.chat_display = QTextEdit()
         self.chat_display.setReadOnly(True)
@@ -59,7 +31,7 @@ class ChatInterface(QWidget):
             color: #004D40;
             font-size: 19px;
         """)
-        self.main_layout.addWidget(self.chat_display)
+        self.content_layout.addWidget(self.chat_display)
 
         # Input area
         self.input_layout = QHBoxLayout()
@@ -90,24 +62,10 @@ class ChatInterface(QWidget):
         self.send_button.clicked.connect(self.start_typing_user_message)
         self.input_layout.addWidget(self.send_button)
 
-        self.main_layout.addLayout(self.input_layout)
-
-        self.setLayout(self.main_layout)
+        self.content_layout.addLayout(self.input_layout)
 
         # Connect Enter key to send message
         self.text_input.returnPressed.connect(self.send_button.click)
-
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtWidgets.QApplication.primaryScreen().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
-    def go_back(self):
-        from ui.start_window import StartWindow  # Import inside method
-        self.start_window = StartWindow(self.media_player)
-        self.start_window.show()
-        self.close()
 
     def start_typing_user_message(self):
         # Get the user's message and initiate typing effect

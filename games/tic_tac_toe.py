@@ -1,14 +1,14 @@
 import random
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QMessageBox
+    QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QMessageBox
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtWidgets
+from games.game import GameWindow
 
-class TicTacToeWindow(QWidget):
+class TicTacToeWindow(GameWindow):
     def __init__(self, media_player):
-        super().__init__()
-        self.media_player = media_player
+        super().__init__(media_player)
         self.is_paused = False
         self.agent_thinking = False
         self.initUI()
@@ -66,13 +66,6 @@ class TicTacToeWindow(QWidget):
         # Agent starts the game
         self.agent_thinking = True
         QTimer.singleShot(1000, self.computer_move)
-
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtWidgets.QApplication.primaryScreen().availableGeometry() \
-            .center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
 
     def create_board(self):
         self.board = ['' for _ in range(9)]
@@ -158,12 +151,6 @@ class TicTacToeWindow(QWidget):
             """)
         self.agent_thinking = True
         QTimer.singleShot(1000, self.computer_move)
-
-    def go_back(self):
-        from ui.game_menu_window import GameMenuWindow  # Import inside method
-        self.game_menu_window = GameMenuWindow(self.media_player)
-        self.game_menu_window.show()
-        self.close()
 
     def pause_game(self):
         self.is_paused = self.pause_button.isChecked()

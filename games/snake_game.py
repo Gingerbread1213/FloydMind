@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPainter, QColor
 from PyQt5 import QtWidgets
+from games.game import GameWindow
 
-class SnakeWindow(QWidget):
+class SnakeWindow(GameWindow):
     def __init__(self, media_player):
-        super().__init__()
-        self.media_player = media_player
+        super().__init__(media_player)
         self.initUI()
 
     def initUI(self):
@@ -84,12 +84,6 @@ class SnakeWindow(QWidget):
         # Start the game
         self.game_area.start_game()
 
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtWidgets.QApplication.primaryScreen().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
     def adjust_speed(self, value):
         self.game_area.speed = value
         if self.game_area.timer.isActive():
@@ -99,13 +93,6 @@ class SnakeWindow(QWidget):
         self.game_area.timer.stop()
         event.accept()
 
-    def go_back(self):
-        self.game_area.timer.stop()
-        from ui.game_menu_window import GameMenuWindow  # Import inside method to avoid circular import
-        self.game_menu_window = GameMenuWindow(self.media_player)
-        self.game_menu_window.show()
-        self.close()
-
     def pause_game(self):
         if self.pause_button.isChecked():
             self.game_area.timer.stop()
@@ -114,6 +101,7 @@ class SnakeWindow(QWidget):
             self.pause_button.setText("Pause")
             self.game_area.pause_game()
             self.game_area.show_countdown()
+
 
 class SnakeGameArea(QWidget):
     def __init__(self, parent):

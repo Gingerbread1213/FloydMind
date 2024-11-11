@@ -4,10 +4,11 @@ from PyQt5.QtCore import Qt, QBasicTimer
 from PyQt5.QtGui import QPainter, QColor
 from PyQt5 import QtWidgets, QtGui
 
-class TetrisWindow(QWidget):
+from games.game import GameWindow
+
+class TetrisWindow(GameWindow):
     def __init__(self, media_player):
-        super().__init__()
-        self.media_player = media_player
+        super().__init__(media_player)
         self.initUI()
 
     def initUI(self):
@@ -71,22 +72,9 @@ class TetrisWindow(QWidget):
         self.tetris_area.start()
         self.tetris_area.setFocus()  # Ensure the game area has focus
 
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtWidgets.QApplication.primaryScreen().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
     def closeEvent(self, event):
         self.tetris_area.timer.stop()
         event.accept()
-
-    def go_back(self):
-        self.tetris_area.timer.stop()
-        from ui.game_menu_window import GameMenuWindow  # Import inside method to avoid circular import
-        self.game_menu_window = GameMenuWindow(self.media_player)
-        self.game_menu_window.show()
-        self.close()
 
     def pause_game(self):
         if self.pause_button.isChecked():
@@ -95,6 +83,7 @@ class TetrisWindow(QWidget):
         else:
             self.tetris_area.pause()
             self.pause_button.setText("Pause")
+
 
 class TetrisArea(QWidget):
     SPEED = 300  # Adjust the speed (lower is faster)

@@ -1,14 +1,14 @@
 import random
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QMessageBox
+    QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QMessageBox
 )
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
+from games.game import GameWindow
 
-class HangmanWindow(QWidget):
+class HangmanWindow(GameWindow):
     def __init__(self, media_player):
-        super().__init__()
-        self.media_player = media_player
+        super().__init__(media_player)
         self.is_paused = False
         self.initUI()
 
@@ -117,12 +117,6 @@ class HangmanWindow(QWidget):
 
         self.reset_game()
 
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QtWidgets.QApplication.primaryScreen().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
     def reset_game(self):
         self.words = [
             'python', 'hangman', 'programming', 'pyqt', 'openai', 'algorithm',
@@ -188,12 +182,6 @@ class HangmanWindow(QWidget):
                 QMessageBox.information(self, "Hangman",
                                         "Congratulations! You've guessed the word!")
                 self.reset_game()
-
-    def go_back(self):
-        from ui.game_menu_window import GameMenuWindow  # Import inside method
-        self.game_menu_window = GameMenuWindow(self.media_player)
-        self.game_menu_window.show()
-        self.close()
 
     def pause_game(self):
         self.is_paused = self.pause_button.isChecked()
